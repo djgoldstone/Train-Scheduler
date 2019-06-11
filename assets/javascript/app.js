@@ -26,7 +26,10 @@ var config = {
           firstTrainTime: firstTrainTime,
           frequency: frequency
       };
-
+      $("#train-name-input").val("");
+      $("#destination-input").val("");
+      $("#first-train-input").val("");
+      $("#frequency-input").val("");
       database.ref().push(newTrain);
   });
 
@@ -37,7 +40,15 @@ var config = {
       var destinationData = $("<td>").text(child.destination);
       var firstTrainTimeData = $("<td>").text(child.firstTrainTime);
       var frequencyData = $("<td>").text(child.frequency);
-
-      $("#table").append(newRow, trainNameData, destinationData, firstTrainTimeData, frequencyData); }, function (errorObject) {
+      var timestamp = moment(child.firstTrainTime,'HHmm');
+      var minutesAway = $("<td>").text(timestamp.diff(moment(),"minutes"));
+      if (timestamp.diff(moment(),"minutes") <= 0) {
+        destinationData.clear();
+        firstTrainTimeData.clear();
+        frequencyData.clear();
+        trainNameData.clear();
+        minutesAway.clear();
+      }; 
+      $("#table").append(newRow, trainNameData, destinationData, frequencyData,firstTrainTimeData, minutesAway); }, function (errorObject) {
           console.log("Errors handled: " + errorObject.code);
   });
